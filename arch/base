@@ -1,0 +1,29 @@
+#!/bin/bash
+
+export ARCH_PACKAGES="${ARCH_PACKAGES:-} base base-devel vim elinks curl sudo openssh dialog git"
+
+os_prepare() {
+  bstrp_info 'enabling NTP in base install environment...'
+
+  timedatectl set-ntp true
+
+  bstrp_info 'applying localized mirrorlist...'
+
+  cp "${BOOTSTRAP_OS_DIR}/data/mirrorlist" "/etc/pacman.d/mirrorlist"
+
+  bstrp_info 'pacstrapping...'
+
+  bstrp_debug "pacstrap /mnt ${ARCH_PACKAGES}"
+  echo "${ARCH_PACKAGES}" | xargs pacstrap /mnt
+
+  bstrp_info 'applying initial fstab...'
+
+  genfstab -U /mnt >> /mnt/etc/fstab
+
+  bstrp_info 'downloading mach-prov onto installed-fileystem (/mach-prov)...'
+
+  mkdir /mnt/mach-prov
+  curl -sSL "$BOOTSTRAP_REPO_TAR" | tar xz --directory /mnt/mach-prov --strip-components=1
+
+  bstrp_info 'prepare complete!'
+}

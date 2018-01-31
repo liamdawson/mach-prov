@@ -1,5 +1,6 @@
 #!/bin/bash
 
+BOOTSTRAP_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 WORKSPACE_DIR="$HOME/workspace"
 SHARED_CONF_DIR="$WORKSPACE_DIR/cdconf"
 SHARED_CONF_URL="git@github.com:/liamdawson/cdconf.git"

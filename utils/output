@@ -1,0 +1,17 @@
+#!/bin/bash
+
+function bstrp_debug() {
+  echo "[$(date +%Y-%m-%dT%H:%M:%S)][DEBUG]: $1"
+}
+
+function bstrp_info() {
+  echo "[$(date +%Y-%m-%dT%H:%M:%S)][$(tput setaf 7)INFO $(tput sgr0)]: $(tput setaf 7)$1$(tput sgr0)"
+}
+
+function bstrp_warn() {
+  echo "[$(date +%Y-%m-%dT%H:%M:%S)][$(tput setaf 3)WARN $(tput sgr0)]: $(tput setaf 3)$1$(tput sgr0)"
+}
+
+function bstrp_fatal() {
+  echo "[$(date +%Y-%m-%dT%H:%M:%S)][$(tput setaf 1)FATAL$(tput sgr0)]: $(tput setaf 1)$1$(tput sgr0)"
+}

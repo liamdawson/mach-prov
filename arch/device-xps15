@@ -1,0 +1,90 @@
+#!/bin/bash
+
+export ARCH_PACKAGES="${ARCH_PACKAGES:-} btrfs-progs snapper refind-efi mesa wpa_supplicant intel-ucode"
+MAIN_HDD_DEVICE="/dev/nvme0n1"
+
+function partition_path() {
+  echo "${MAIN_HDD_DEVICE}p$1"
+}
+
+function device_prepare() {
+  bstrp_info 'formatting machine...'
+
+  # format:
+
+  # EFI (FAT32, 300MB)
+  EFI_PART_SIZE="300"
+  EFI_PART_START="1"
+  EFI_PART_END="$(($EFI_PART_START + $EFI_PART_SIZE))"
+
+  # Swap (Encrypted Swap, 1MB part header + 4096MB)
+  SWAP_PART_SIZE="4097"
+  SWAP_PART_START="$EFI_PART_END"
+  SWAP_PART_END="$(($SWAP_PART_START + $SWAP_PART_SIZE))"
+
+  # Arch space (BTRFS, 163840MB)
+  ROOT_PART_SIZE="163840"
+  ROOT_PART_START="$SWAP_PART_END"
+  ROOT_PART_END="$(($ROOT_PART_START + $ROOT_PART_SIZE))"
+
+  # LFS? (ext4, 40960MB)
+  LFS_PART_SIZE="40960"
+  LFS_PART_START="$ROOT_PART_END"
+  LFS_PART_END="$(($LFS_PART_START + $LFS_PART_SIZE))"
+
+  # Free for Windows (none, 315092MB)
+
+  # 1. Create GPT table
+
+  parted -s -a optimal "$MAIN_HDD_DEVICE" mktable gpt
+
+  # 2. Create and format the desired partitions
+  parted -s -a optimal "$MAIN_HDD_DEVICE" mkpart primary fat32 "${EFI_PART_START}M" "${EFI_PART_END}M"
+  parted -s -a optimal "$MAIN_HDD_DEVICE" mkpart primary linux-swap "${SWAP_PART_START}M" "${SWAP_PART_END}M"
+  parted -s -a optimal "$MAIN_HDD_DEVICE" mkpart primary btrfs "${ROOT_PART_START}M" "${ROOT_PART_END}M"
+  parted -s -a optimal "$MAIN_HDD_DEVICE" mkpart primary ext4 "${LFS_PART_START}M" "${LFS_PART_END}M"
+
+  parted -s -a optimal "$MAIN_HDD_DEVICE" name 1 "efi"
+  parted -s -a optimal "$MAIN_HDD_DEVICE" name 2 "scrypted"
+  parted -s -a optimal "$MAIN_HDD_DEVICE" name 3 "archroot"
+  parted -s -a optimal "$MAIN_HDD_DEVICE" name 4 "lfs"
+
+  # 3. Make filesystems
+
+  mkfs.fat -F32 "$(partition_path 1)"
+  # make the filesystem 1M, to keep a pointer for the UUID
+  mkfs.ext2 -L scrypted "$(partition_path 2)" 1M
+  mkfs.btrfs -f "$(partition_path 3)"
+  mkfs.ext4 -F "$(partition_path 4)"
+
+  # 4. Create BTRFS subvolumes
+
+  mount "$(partition_path 3)" /mnt
+  btrfs subvolume create /mnt/@root
+  btrfs subvolume create /mnt/@var
+  btrfs subvolume create /mnt/@home
+
+  umount /mnt
+
+  bstrp_info 'mounting volumes...'
+
+  mount -o noatime,compress=lzo,space_cache,ssd,subvol=@root "$(partition_path 3)" /mnt
+  mkdir /mnt/{boot,var,home}
+  mount -o noatime,compress=lzo,space_cache,ssd,subvol=@var "$(partition_path 3)" /mnt/var
+  mount -o noatime,compress=lzo,space_cache,ssd,subvol=@home "$(partition_path 3)" /mnt/home
+  mkdir /mnt/boot/efi
+  mount "$(partition_path 1)" /mnt/boot/efi
+
+  # run the os base prepare script
+  os_prepare
+
+  bstrp_info 'preparing encrypted swap...'
+
+  echo 'swap	LABEL=scrypted	/dev/urandom	swap,offset=2048,cipher=aes-xts-plain64,size=256' >> /mnt/etc/crypttab
+
+  echo '/dev/mapper/swap	none	swap	defaults	0	0' >> /mnt/etc/fstab
+
+  bstrp_info 'device prepare complete!'
+}
+
+source "$BOOTSTRAP_OS_DIR/base"
