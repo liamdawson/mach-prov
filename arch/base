@@ -80,4 +80,19 @@ function os_install_cleanup() {
 function os_update() {
   #ensure required packages are installed:
   sudo pacman --needed --noconfirm -Sy stow zsh
+
+  #ensure my preferred AUR helper is installed
+  if [[ -z "$(which trizen 2>/dev/null)" ]]
+  then
+    OLD_DIR="$(pwd)"
+    cd /tmp
+    git clone https://aur.archlinux.org/trizen.git
+    cd trizen
+    makepkg -si
+    cd "$OLD_DIR"
+    rm -rf /tmp/trizen
+  fi
+
+  # ensure required AUR packages are installed
+  trizen -Sy kmscon
 }
