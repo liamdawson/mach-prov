@@ -120,4 +120,11 @@ function device_install() {
   os_install_cleanup
 }
 
+function device_update() {
+  os_update
+
+  #ensure required packages are installed:
+  sudo pacman --noconfirm -Sy stow
+}
+
 source "$BOOTSTRAP_OS_DIR/base"

@@ -2,7 +2,7 @@
 
 export ARCH_PACKAGES="${ARCH_PACKAGES:-} base base-devel vim elinks curl sudo openssh dialog git"
 
-os_prepare() {
+function os_prepare() {
   bstrp_info 'enabling NTP in base install environment...'
 
   timedatectl set-ntp true
@@ -28,7 +28,7 @@ os_prepare() {
   bstrp_info 'prepare complete!'
 }
 
-os_install() {
+function os_install() {
   bstrp_info 'setting timezone...'
   bstrp_debug "setting to $BOOTSTRAP_VAR_TIMEZONE"
 
@@ -73,6 +73,10 @@ os_install() {
   passwd "$BOOTSTRAP_USERNAME"
 }
 
-os_install_cleanup() {
+function os_install_cleanup() {
   rm -rf /mach-prov
+}
+
+function os_update() {
+  true
 }
