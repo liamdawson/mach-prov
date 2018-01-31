@@ -37,7 +37,7 @@ os_install() {
 
   bstrp_info 'setting locales...'
 
-  sed -Ee "s/^#(${BOOTSTRAP_VAR_BASE_LOCALE}.*)\$/\\1/"
+  sed -Ee 's/^#('"$BOOTSTRAP_VAR_BASE_LOCALE"'.*)$/\1/' /etc/locale.gen -i
 
   bstrp_info 'generating locales...'
 
