@@ -16,10 +16,10 @@ Liam Dawson's personal machine provisioning scripts.
 mkdir ~/b
 cd ~/b
 curl -sSL https://github.com/liamdawson/mach-prov/archive/master.tar.gz | tar xz --strip-components=1
-./prepare dell/xps15
+./prepare dell/device-xps15
 arch-chroot /mnt
 cd /mach-prov
-./install dell/xps15 fhtagn liamdawson
+./install dell/device-xps15 fhtagn liamdawson
 ```
 
 #### Update

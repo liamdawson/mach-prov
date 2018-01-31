@@ -30,9 +30,9 @@ os_prepare() {
 
 os_install() {
   bstrp_info 'setting timezone...'
-  bstrp_debug "setting to $BOOTSTRAP_VARS_TIMEZONE"
+  bstrp_debug "setting to $BOOTSTRAP_VAR_TIMEZONE"
 
-  ln -sf "/usr/share/zoneinfo/$BOOTSTRAP_VARS_TIMEZONE" /etc/localtime
+  ln -sf "/usr/share/zoneinfo/$BOOTSTRAP_VAR_TIMEZONE" /etc/localtime
   hwclock --systohc
 
   bstrp_info 'setting locales...'
