@@ -25,7 +25,7 @@ SHARED_CONF_URL="git@github.com:/liamdawson/cdconf.git"
   source $1
 
   base_update() {
-    device_update()
+    device_update
   
     # global "I'm working on something here" folder
     [[ -d "$WORKSPACE_DIR" ]] || mkdir "$WORKSPACE_DIR"
