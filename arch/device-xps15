@@ -87,4 +87,37 @@ function device_prepare() {
   bstrp_info 'device prepare complete!'
 }
 
+function device_install() {
+  os_install
+
+  bstrp_info 'preparing fstab for swappable root snapshot...'
+
+  # pass root vol via boot instead of fstab
+  # (e.g. for booting from snapshots later)
+  sed -e 's/^.*@root.*$//' "$1" -i
+
+  bstrp_info 'installing bootloader...'
+
+  REFIND_CONFIG_LOCATION="/boot/refind_linux.conf"
+  BOOT_PART_UUID="$(blkid "$(partition_path 3)" | grep -oP ' UUID="\K[^"]+(?=")')"
+  BOOT_STANZA='"Boot with default options"  "root=UUID='"$BOOT_PART_UUID"' rootflags=rw,subvol=@root add_efi_memmap initrd=@root/boot/intel-ucode.img initrd=@root/boot/initramfs-linux.img"'
+
+  # write the default boot configuration
+  echo "$BOOT_STANZA" > "$REFIND_CONFIG_LOCATION"
+
+  refind-install
+
+  # search the correct BTRFS subvolume for boot files
+  sed -e 's|^#also_scan_dirs.*$|also_scan_dirs @root/boot|' /boot/efi/EFI/refind/refind.conf -i
+
+  bstrp_info 'adding service to create snapshot on first boot...'
+
+  cp "$BOOTSTRAP_OS_DIR/data/btrfs/firstbootsnapshot.service" /etc/systemd/system/firstbootsnapshot.service
+  systemctl enable firstbootsnapshot
+
+  bstrp_info 'completed device install!'
+
+  os_install_cleanup
+}
+
 source "$BOOTSTRAP_OS_DIR/base"

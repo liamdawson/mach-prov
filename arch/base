@@ -27,3 +27,52 @@ os_prepare() {
 
   bstrp_info 'prepare complete!'
 }
+
+os_install() {
+  bstrp_info 'setting timezone...'
+  bstrp_debug "setting to $BOOTSTRAP_VARS_TIMEZONE"
+
+  ln -sf "/usr/share/zoneinfo/$BOOTSTRAP_VARS_TIMEZONE" /etc/localtime
+  hwclock --systohc
+
+  bstrp_info 'setting locales...'
+
+  sed -Ee "s/^#(${BOOTSTRAP_VAR_BASE_LOCALE}.*)\$/\\1/"
+
+  bstrp_info 'generating locales...'
+
+  locale-gen
+
+  bstrp_info 'setting default locale...'
+
+  echo "LANG=$BOOTSTRAP_VAR_DEFAULT_LOCALE" > /etc/locale.conf
+
+  bstrp_info 'setting hostname...'
+  bstrp_debug "setting to $BOOTSTRAP_HOSTNAME"
+
+  echo "$BOOTSTRAP_HOSTNAME" > /etc/hostname
+
+  bstrp_info 'setting hosts file...'
+
+  echo '127.0.0.1	localhost' >> /etc/hosts
+  echo '::1	localhost' >> /etc/hosts
+  echo "127.0.1.1	${BOOTSTRAP_HOSTNAME}.localdomain $BOOTSTRAP_HOSTNAME" >> /etc/hosts
+
+  bstrp_info 'adding default user...'
+  bstrp_debug "adding user $BOOTSTRAP_USERNAME"
+
+  useradd -m "$BOOTSTRAP_USERNAME"
+  usermod -aG wheel "$BOOTSTRAP_USERNAME"
+
+  bstrp_info 'enabling default sudo configuration...'
+
+  cp "${BOOTSTRAP_OS_DIR}/data/50-wheel-admin" /etc/sudoers.d/50-wheel-admin
+
+  bstrp_info "changing default user's password..."
+
+  passwd "$BOOTSTRAP_USERNAME"
+}
+
+os_install_cleanup() {
+  rm -rf /mach-prov
+}
