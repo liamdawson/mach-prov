@@ -14,8 +14,8 @@ Liam Dawson's personal machine provisioning scripts.
 # enable network, then...
 
 mkdir ~/b
-curl -sSL https://github.com/liamdawson/mach-prov/archive/master.tar.gz | tar xz --strip-components=1 --directory=~/b
-cd ~/b/
+cd ~/b
+curl -sSL https://github.com/liamdawson/mach-prov/archive/master.tar.gz | tar xz --strip-components=1
 ./prepare dell/xps15
 arch-chroot /mnt
 cd /mach-prov

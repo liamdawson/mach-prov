@@ -53,7 +53,7 @@ function device_prepare() {
 
   mkfs.fat -F32 "$(partition_path 1)"
   # make the filesystem 1M, to keep a pointer for the UUID
-  mkfs.ext2 -L scrypted "$(partition_path 2)" 1M
+  mkfs.ext2 -F -L scrypted "$(partition_path 2)" 1M
   mkfs.btrfs -f "$(partition_path 3)"
   mkfs.ext4 -F "$(partition_path 4)"
 
