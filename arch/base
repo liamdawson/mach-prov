@@ -78,5 +78,6 @@ function os_install_cleanup() {
 }
 
 function os_update() {
-  true
+  #ensure required packages are installed:
+  sudo pacman --needed --noconfirm -Sy stow zsh
 }
