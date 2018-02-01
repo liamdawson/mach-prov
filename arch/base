@@ -85,9 +85,8 @@ function os_update() {
   if [[ -z "$(which trizen 2>/dev/null)" ]]
   then
     OLD_DIR="$(pwd)"
-    cd /tmp
-    git clone https://aur.archlinux.org/trizen.git
-    cd trizen
+    git clone https://aur.archlinux.org/trizen.git /tmp/trizen
+    cd /tmp/trizen
     makepkg -si
     cd "$OLD_DIR"
     rm -rf /tmp/trizen
