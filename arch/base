@@ -81,7 +81,7 @@ function os_update() {
   #ensure required packages are installed:
   sudo pacman --needed --noconfirm -Sy stow zsh
 
-  #ensure my preferred AUR helper is installed
+  #ensure my preferred AUR helper is installed and updated
   if [[ -z "$(which trizen 2>/dev/null)" ]]
   then
     OLD_DIR="$(pwd)"
@@ -91,6 +91,8 @@ function os_update() {
     makepkg -si
     cd "$OLD_DIR"
     rm -rf /tmp/trizen
+  else
+    trizen -Sy trizen
   fi
 
   # ensure required AUR packages are installed
