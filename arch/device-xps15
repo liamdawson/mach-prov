@@ -90,6 +90,10 @@ function device_prepare() {
 function device_install() {
   os_install
 
+  bstrp_info 'blacklisting nouveau...'
+
+  echo 'blacklist nouveau' > /etc/modprobe.d/10-blacklist-nouveau.conf
+
   bstrp_info 'preparing fstab for swappable root snapshot...'
 
   # pass root vol via boot instead of fstab
@@ -122,6 +126,14 @@ function device_install() {
 
 function device_update() {
   os_update
+
+  bstrp_info 'configuring kmscon...'
+  trizen -Sy kmscon
+
+  [[ -d '/etc/kmscon/' ]] || (sudo mkdir /etc/kmscon && sudo chmod 0755 /etc/kmscon)
+  sudo cp "$BOOTSTRAP_OS_DIR/data/xps15/kmscon.conf" '/etc/kmscon/kmscon.conf'
+
+  sudo ln -s /usr/lib/systemd/system/kmsconvt\@.service /etc/systemd/system/autovt\@.service
 }
 
 source "$BOOTSTRAP_OS_DIR/base"

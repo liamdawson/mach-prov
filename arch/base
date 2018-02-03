@@ -95,5 +95,8 @@ function os_update() {
   fi
 
   # ensure required AUR packages are installed
-  trizen -Sy kmscon
+  trizen -Sy ttf-roboto-mono
+
+  # ensure preferred fonts are installed
+  sudo cp "$BOOTSTRAP_OS_DIR/data/font-config/90-monospace.conf" '/etc/fonts/conf.d/'
 }
