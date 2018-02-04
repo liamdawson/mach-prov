@@ -1,6 +1,12 @@
 #!/bin/bash
 
-export ARCH_PACKAGES="${ARCH_PACKAGES:-} base base-devel vim elinks curl sudo openssh dialog git stow zsh xorg-server xorg-server-xwayland gdm ttf-roboto xfce4-terminal firefox firefox-developer-edition noto-fonts noto-fonts-extra noto-fonts-emoji gnome-shell polkit-gnome"
+export ARCH_BASE_PACKAGES="base base-devel vim curl sudo openssh"
+export ARCH_DEV_PACKAGES="git stow"
+export ARCH_APP_PACKAGES="elinks xfce4-terminal firefox firefox-developer-edition"
+export ARCH_GUI_PACKAGES="xorg-server xorg-server-xwayland gdm gnome-shell polkit-gnome network-manager-applet"
+export ARCH_FONT_PACKAGES="ttf-roboto noto-fonts noto-fonts-extra noto-fonts-emoji"
+export ARCH_MISC_PACKAGES="zsh dialog"
+export ARCH_PACKAGES="${ARCH_PACKAGES:-} ${ARCH_BASE_PACKAGES} ${ARCH_DEV_PACKAGES} ${ARCH_APP_PACKAGES} ${ARCH_GUI_PACKAGES} ${ARCH_FONT_PACKAGES} ${ARCH_MISC_PACKAGES}"
 
 function os_prepare() {
   bstrp_info 'enabling NTP in base install environment...'
