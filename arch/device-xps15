@@ -128,12 +128,12 @@ function device_update() {
   os_update
 
   bstrp_info 'configuring kmscon...'
-  trizen -Sy kmscon
+  trizen -Sy --needed --noconfirm kmscon
 
   [[ -d '/etc/kmscon/' ]] || (sudo mkdir /etc/kmscon && sudo chmod 0755 /etc/kmscon)
   sudo cp "$BOOTSTRAP_OS_DIR/data/xps15/kmscon.conf" '/etc/kmscon/kmscon.conf'
 
-  sudo ln -s /usr/lib/systemd/system/kmsconvt\@.service /etc/systemd/system/autovt\@.service
+  [[ -f '/etc/systemd/system/autovt@.service' ]] || sudo ln -s '/usr/lib/systemd/system/kmsconvt@.service' '/etc/systemd/system/autovt@.service'
 }
 
 source "$BOOTSTRAP_OS_DIR/base"

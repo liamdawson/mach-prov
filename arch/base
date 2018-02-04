@@ -91,11 +91,11 @@ function os_update() {
     cd "$OLD_DIR"
     rm -rf /tmp/trizen
   else
-    trizen -Sy trizen
+    trizen --needed --noconfirm -Sy trizen
   fi
 
   # ensure required AUR packages are installed
-  trizen -Sy ttf-roboto-mono
+  trizen --needed --noconfirm -Sy ttf-roboto-mono
 
   # ensure preferred fonts are installed
   sudo cp "$BOOTSTRAP_OS_DIR/data/font-config/90-monospace.conf" '/etc/fonts/conf.d/'
