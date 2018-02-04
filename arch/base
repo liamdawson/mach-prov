@@ -79,7 +79,7 @@ function os_install_cleanup() {
 
 function os_update() {
   #ensure required packages are installed:
-  sudo pacman --needed --noconfirm -Sy stow zsh xorg-server xorg-server-xwayland sddm ttf-roboto
+  sudo pacman --needed --noconfirm -Sy stow zsh xorg-server xorg-server-xwayland gdm ttf-roboto
 
   #ensure my preferred AUR helper is installed and updated
   if [[ -z "$(which trizen 2>/dev/null)" ]]
