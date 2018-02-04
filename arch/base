@@ -1,6 +1,6 @@
 #!/bin/bash
 
-export ARCH_PACKAGES="${ARCH_PACKAGES:-} base base-devel vim elinks curl sudo openssh dialog git"
+export ARCH_PACKAGES="${ARCH_PACKAGES:-} base base-devel vim elinks curl sudo openssh dialog git stow zsh xorg-server xorg-server-xwayland gdm ttf-roboto xfce4-terminal"
 
 function os_prepare() {
   bstrp_info 'enabling NTP in base install environment...'
@@ -79,7 +79,7 @@ function os_install_cleanup() {
 
 function os_update() {
   #ensure required packages are installed:
-  sudo pacman --needed --noconfirm -Sy stow zsh xorg-server xorg-server-xwayland gdm ttf-roboto
+  echo "$ARCH_PACKAGES" | xargs sudo pacman --needed --noconfirm -Sy 
 
   #ensure my preferred AUR helper is installed and updated
   if [[ -z "$(which trizen 2>/dev/null)" ]]
