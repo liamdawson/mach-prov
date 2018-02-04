@@ -7,6 +7,7 @@ export ARCH_GUI_PACKAGES="xorg-server xorg-server-xwayland gdm gnome-shell polki
 export ARCH_FONT_PACKAGES="ttf-roboto noto-fonts noto-fonts-extra noto-fonts-emoji"
 export ARCH_MISC_PACKAGES="zsh dialog"
 export ARCH_PACKAGES="${ARCH_PACKAGES:-} ${ARCH_BASE_PACKAGES} ${ARCH_DEV_PACKAGES} ${ARCH_APP_PACKAGES} ${ARCH_GUI_PACKAGES} ${ARCH_FONT_PACKAGES} ${ARCH_MISC_PACKAGES}"
+export GNOME_EXTENSIONS="user-theme@gnome-shell-extensions.gcampax.github.com dash-to-panel@jderose9.github.com"
 
 function os_prepare() {
   bstrp_info 'enabling NTP in base install environment...'
@@ -105,4 +106,8 @@ function os_update() {
   # ensure preferred fonts are installed
   trizen --needed --noconfirm -Sy ttf-roboto-mono
   sudo cp "$BOOTSTRAP_OS_DIR/data/font-config/90-monospace.conf" '/etc/fonts/conf.d/'
+
+  # pull gnome extension install script
+  sudo (curl -sSL 'https://gist.githubusercontent.com/okelet/14bb79ff44e45eee869d444b6a7d68cf/raw/7992b7b6594da76a46c8479a0f03a2c8bd411e6d/gnome-ext-install.sh' > /usr/local/bin/gnome-ext)
+  sudo chmod +x /usr/local/bin/gnome-ext
 }
