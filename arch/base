@@ -1,18 +1,20 @@
 #!/bin/bash
 
 export ARCH_BASE_PACKAGES="base base-devel vim curl sudo openssh"
-export ARCH_DEV_PACKAGES="git stow minicom jdk8-openjdk"
+export ARCH_DEV_PACKAGES="git stow minicom jdk8-openjdk gdb"
 export ARCH_DEV_APP_PACKAGES="firefox-developer-edition"
-export ARCH_APP_PACKAGES="${ARCH_DEV_APP_PACKAGES} elinks xfce4-terminal firefox firefox-developer-edition gnome-control-center nautilus"
+export ARCH_APP_PACKAGES="${ARCH_DEV_APP_PACKAGES} elinks xfce4-terminal firefox firefox-developer-edition gnome-control-center nautilus gnome-tweak-tool"
 export ARCH_GUI_PACKAGES="xorg-server xorg-server-xwayland gdm gnome-shell polkit-gnome network-manager-applet"
 export ARCH_FONT_PACKAGES="ttf-roboto noto-fonts noto-fonts-extra noto-fonts-emoji"
 export ARCH_MISC_PACKAGES="zsh dialog"
 export ARCH_PACKAGES="${ARCH_PACKAGES:-} ${ARCH_BASE_PACKAGES} ${ARCH_DEV_PACKAGES} ${ARCH_APP_PACKAGES} ${ARCH_GUI_PACKAGES} ${ARCH_FONT_PACKAGES} ${ARCH_MISC_PACKAGES}"
-export AUR_DEV_APP_PACKAGES="jetbrains-toolbox visual-studio-code-bin"
+export AUR_GUI_PACKAGES="gnome-shell-extension-desk-changer-git"
+export AUR_DEV_PACKAGES="openocd"
+export AUR_DEV_APP_PACKAGES="jetbrains-toolbox visual-studio-code-bin zeal"
 export AUR_FONT_PACKAGES="ttf-roboto-mono"
 export AUR_APP_PACKAGES="trizen"
 export AUR_MISC_PACKAGES="icu55"
-export AUR_PACKAGES="${AUR_FONT_PACKAGES} ${AUR_APP_PACKAGES} ${AUR_DEV_APP_PACKAGES} ${AUR_MISC_PACKAGES}"
+export AUR_PACKAGES="${AUR_GUI_PACKAGES} ${AUR_FONT_PACKAGES} ${AUR_APP_PACKAGES} ${AUR_DEV_PACKAGES} ${AUR_DEV_APP_PACKAGES} ${AUR_MISC_PACKAGES}"
 export GNOME_EXTENSIONS="user-theme@gnome-shell-extensions.gcampax.github.com dash-to-panel@jderose9.github.com"
 
 function os_prepare() {
