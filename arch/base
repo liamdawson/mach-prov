@@ -1,7 +1,7 @@
 #!/bin/bash
 
 export ARCH_BASE_PACKAGES="base base-devel vim curl sudo openssh"
-export ARCH_DEV_PACKAGES="git stow minicom jdk8-openjdk gdb"
+export ARCH_DEV_PACKAGES="git stow minicom jdk8-openjdk gdb arm-none-eabi-binutils arm-none-eabi-gdb"
 export ARCH_DEV_APP_PACKAGES="firefox-developer-edition"
 export ARCH_APP_PACKAGES="${ARCH_DEV_APP_PACKAGES} elinks xfce4-terminal firefox firefox-developer-edition gnome-control-center nautilus gnome-tweak-tool"
 export ARCH_GUI_PACKAGES="xorg-server xorg-server-xwayland gdm gnome-shell polkit-gnome network-manager-applet"
