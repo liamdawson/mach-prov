@@ -26,6 +26,10 @@ function os_prepare() {
 
   cp "${BOOTSTRAP_OS_DIR}/data/mirrorlist" "/etc/pacman.d/mirrorlist"
 
+  bstrp_info 'enabling multilib...'
+
+  cp "${BOOTSTRAP_OS_DIR}/data/pacman.conf" "/etc/pacman.conf"
+
   bstrp_info 'pacstrapping...'
 
   bstrp_debug "pacstrap /mnt ${ARCH_PACKAGES}"
