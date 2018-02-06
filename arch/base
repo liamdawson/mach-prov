@@ -87,6 +87,10 @@ function os_install() {
 
   cp "${BOOTSTRAP_OS_DIR}/data/50-wheel-admin" /etc/sudoers.d/50-wheel-admin
 
+  bstrp_info 'enabling gui...'
+
+  systemctl enable gdm
+
   bstrp_info "changing default user's password..."
 
   passwd "$BOOTSTRAP_USERNAME"
