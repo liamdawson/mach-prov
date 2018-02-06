@@ -11,55 +11,38 @@ function device_prepare() {
   bstrp_info 'formatting machine...'
 
   # format:
+  # (only partitioning is 'automatic' - partition flags and mounting all manual below)
 
-  # EFI (FAT32, 300MB)
-  EFI_PART_SIZE="300"
-  EFI_PART_START="1"
-  EFI_PART_END="$(($EFI_PART_START + $EFI_PART_SIZE))"
-
-  # Swap (Encrypted Swap, 1MB part header + 4096MB)
-  SWAP_PART_SIZE="4097"
-  SWAP_PART_START="$EFI_PART_END"
-  SWAP_PART_END="$(($SWAP_PART_START + $SWAP_PART_SIZE))"
-
-  # Arch space (BTRFS, 163840MB)
-  ROOT_PART_SIZE="163840"
-  ROOT_PART_START="$SWAP_PART_END"
-  ROOT_PART_END="$(($ROOT_PART_START + $ROOT_PART_SIZE))"
-
-  # LFS? (ext4, 40960MB)
-  LFS_PART_SIZE="40960"
-  LFS_PART_START="$ROOT_PART_END"
-  LFS_PART_END="$(($LFS_PART_START + $LFS_PART_SIZE))"
-
-  # Free for Windows (none, 315092MB)
-
-  # 1. Create GPT table
+  # in MiB, not MB
+  PARTITION_SIZES=( 499 100 16 256000 4097 180224 )
+  PARTITION_FORMATS=( ntfs fat32 none ntfs linux-swap btrfs )
+  PARTITION_NAMES=( "Basic data partition" "EFI system partition" "Microsoft reserved partition" "Basic data partition" "scrypted" "archroot" )
+  PARTITION_COMMAND=( "mkfs.ntfs -f -F %s" "mkfs.fat -F32 %s" "true %s" "mkfs.ntfs -f -F %s" "mkfs.ext2 -F -L scrypted %s 1MB" "mkfs.btrfs -f %s" )
 
   parted -s -a optimal "$MAIN_HDD_DEVICE" mktable gpt
 
-  # 2. Create and format the desired partitions
-  parted -s -a optimal "$MAIN_HDD_DEVICE" mkpart primary fat32 "${EFI_PART_START}M" "${EFI_PART_END}M"
-  parted -s -a optimal "$MAIN_HDD_DEVICE" mkpart primary linux-swap "${SWAP_PART_START}M" "${SWAP_PART_END}M"
-  parted -s -a optimal "$MAIN_HDD_DEVICE" mkpart primary btrfs "${ROOT_PART_START}M" "${ROOT_PART_END}M"
-  parted -s -a optimal "$MAIN_HDD_DEVICE" mkpart primary ext4 "${LFS_PART_START}M" "${LFS_PART_END}M"
+  LAST_END="1"
+  for i in "${!PARTITION_SIZES[@]}"
+  do
+    END="$(($LAST_END + $PARTITION_SIZES[$i]))"
+    parted -s -a optimal "$MAIN_HDD_DEVICE" mkpart primary "${PARTITION_FORMATS[$i]}" "${LAST_END}MiB" "${END}MiB"
+    parted -s -a optimal "$MAIN_HDD_DEVICE" name $i $PARTITION_NAMES[$i]
+    eval "$(printf PARTITION_COMMAND[$i] "$(partition_path $i)")"
+    LAST_END="$END"
+  done
 
-  parted -s -a optimal "$MAIN_HDD_DEVICE" name 1 "efi"
-  parted -s -a optimal "$MAIN_HDD_DEVICE" name 2 "scrypted"
-  parted -s -a optimal "$MAIN_HDD_DEVICE" name 3 "archroot"
-  parted -s -a optimal "$MAIN_HDD_DEVICE" name 4 "lfs"
+  # end automatic section
 
-  # 3. Make filesystems
-
-  mkfs.fat -F32 "$(partition_path 1)"
-  # make the filesystem 1M, to keep a pointer for the UUID
-  mkfs.ext2 -F -L scrypted "$(partition_path 2)" 1M
-  mkfs.btrfs -f "$(partition_path 3)"
-  mkfs.ext4 -F "$(partition_path 4)"
+  parted -s -a optimal "$MAIN_HDD_DEVICE" set 1 hidden on
+  parted -s -a optimal "$MAIN_HDD_DEVICE" set 1 diag on
+  parted -s -a optimal "$MAIN_HDD_DEVICE" set 2 boot on
+  parted -s -a optimal "$MAIN_HDD_DEVICE" set 2 esp on
+  parted -s -a optimal "$MAIN_HDD_DEVICE" set 3 msftres on
+  parted -s -a optimal "$MAIN_HDD_DEVICE" set 4 msftdata on
 
   # 4. Create BTRFS subvolumes
 
-  mount "$(partition_path 3)" /mnt
+  mount "$(partition_path 6)" /mnt
   btrfs subvolume create /mnt/@root
   btrfs subvolume create /mnt/@var
   btrfs subvolume create /mnt/@home
@@ -68,12 +51,12 @@ function device_prepare() {
 
   bstrp_info 'mounting volumes...'
 
-  mount -o noatime,compress=lzo,space_cache,ssd,subvol=@root "$(partition_path 3)" /mnt
+  mount -o noatime,compress=lzo,space_cache,ssd,subvol=@root "$(partition_path 6)" /mnt
   mkdir /mnt/{boot,var,home}
-  mount -o noatime,compress=lzo,space_cache,ssd,subvol=@var "$(partition_path 3)" /mnt/var
-  mount -o noatime,compress=lzo,space_cache,ssd,subvol=@home "$(partition_path 3)" /mnt/home
+  mount -o noatime,compress=lzo,space_cache,ssd,subvol=@var "$(partition_path 6)" /mnt/var
+  mount -o noatime,compress=lzo,space_cache,ssd,subvol=@home "$(partition_path 6)" /mnt/home
   mkdir /mnt/boot/efi
-  mount "$(partition_path 1)" /mnt/boot/efi
+  mount "$(partition_path 2)" /mnt/boot/efi
 
   # run the os base prepare script
   os_prepare
