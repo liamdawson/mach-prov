@@ -114,7 +114,7 @@ function os_update() {
     OLD_DIR="$(pwd)"
     git clone https://aur.archlinux.org/trizen.git /tmp/trizen
     cd /tmp/trizen
-    makepkg -si
+    makepkg -si --noconfirm
     cd "$OLD_DIR"
     rm -rf /tmp/trizen
   fi
