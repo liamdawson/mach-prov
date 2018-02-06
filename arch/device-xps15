@@ -15,7 +15,7 @@ function device_prepare() {
 
   # in MiB, not MB
   PARTITION_SIZES=( 499 100 16 256000 4097 180224 )
-  PARTITION_FORMATS=( ntfs fat32 none ntfs linux-swap btrfs )
+  PARTITION_FORMATS=( ntfs fat32 '' ntfs linux-swap btrfs )
   PARTITION_NAMES=( "Basic data partition" "EFI system partition" "Microsoft reserved partition" "Basic data partition" "scrypted" "archroot" )
   PARTITION_COMMAND=( "mkfs.ntfs -f -F %s" "mkfs.fat -F32 %s" "true %s" "mkfs.ntfs -f -F %s" "mkfs.ext2 -F -L scrypted %s 1MB" "mkfs.btrfs -f %s" )
 
@@ -26,7 +26,7 @@ function device_prepare() {
   do
     END="$(($LAST_END + ${PARTITION_SIZES[$i]}))"
     parted -s -a optimal "$MAIN_HDD_DEVICE" mkpart primary "${PARTITION_FORMATS[$i]}" "${LAST_END}MiB" "${END}MiB"
-    parted -s -a optimal "$MAIN_HDD_DEVICE" name "$(($i + 1))" "${PARTITION_NAMES[$i]}"
+    parted -s -a optimal "$MAIN_HDD_DEVICE" name "$(($i + 1))" "\"${PARTITION_NAMES[$i]}\""
     eval "$(printf "${PARTITION_COMMAND[$i]}" "$(partition_path $(($i + 1)))")"
     LAST_END="$END"
   done
