@@ -128,4 +128,8 @@ function device_update() {
   os_update
 }
 
+function device_post_config_update() {
+  os_post_config_update
+}
+
 source "$BOOTSTRAP_OS_DIR/base"

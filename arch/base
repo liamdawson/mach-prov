@@ -1,7 +1,7 @@
 #!/bin/bash
 
 export ARCH_BASE_PACKAGES="base base-devel vim curl sudo openssh"
-export ARCH_DEV_PACKAGES="git stow minicom jdk8-openjdk gdb arm-none-eabi-binutils arm-none-eabi-gdb"
+export ARCH_DEV_PACKAGES="git stow minicom jdk8-openjdk gdb arm-none-eabi-binutils arm-none-eabi-gdb cmake"
 export ARCH_DEV_APP_PACKAGES="firefox-developer-edition"
 export ARCH_APP_PACKAGES="${ARCH_DEV_APP_PACKAGES} elinks xfce4-terminal firefox firefox-developer-edition gnome-control-center nautilus gnome-tweak-tool"
 export ARCH_GUI_PACKAGES="xorg-server xorg-server-xwayland gdm gnome-shell polkit-gnome network-manager-applet"
@@ -116,4 +116,8 @@ function os_update() {
   # pull gnome extension install script
   sudo bash -c "curl -sSL 'https://gist.githubusercontent.com/okelet/14bb79ff44e45eee869d444b6a7d68cf/raw/7992b7b6594da76a46c8479a0f03a2c8bd411e6d/gnome-ext-install.sh' > /usr/local/bin/gnome-ext"
   sudo chmod +x /usr/local/bin/gnome-ext
+}
+
+function os_post_config_update() {
+  gsettings set org.gnome.desktop.screensaver picture-uri "file://$HOME/Pictures/wallpapers/red-highlands-john-towner.jpg"
 }

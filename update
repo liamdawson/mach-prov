@@ -43,6 +43,8 @@ SHARED_CONF_URL="git@github.com:/liamdawson/cdconf.git"
     else
       echo 'zsh was not found, this is unexpected.'
     fi
+
+    device_post_config_update
   }
 
   base_update
