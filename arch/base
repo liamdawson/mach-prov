@@ -91,6 +91,10 @@ function os_install() {
 
   systemctl enable gdm
 
+  bstrp_info 'enabling Network Manager...'
+
+  systemctl enable NetworkManager
+
   bstrp_info "changing default user's password..."
 
   passwd "$BOOTSTRAP_USERNAME"
