@@ -1,6 +1,6 @@
 #!/bin/bash
 
-export ARCH_PACKAGES="${ARCH_PACKAGES:-} btrfs-progs snapper refind-efi mesa wpa_supplicant intel-ucode"
+export ARCH_PACKAGES="${ARCH_PACKAGES:-} btrfs-progs snapper refind-efi mesa wpa_supplicant intel-ucode xf86-video-intel bumblebee nvidia"
 MAIN_HDD_DEVICE="/dev/nvme0n1"
 
 function partition_path() {
@@ -118,6 +118,14 @@ function device_install() {
 
   cp "$BOOTSTRAP_OS_DIR/data/btrfs/firstbootsnapshot.service" /etc/systemd/system/firstbootsnapshot.service
   systemctl enable firstbootsnapshot
+
+  bstrp_info 'adding user to bumblebee group...'
+
+  usermod -aG bumblebee "$BOOTSTRAP_USERNAME"
+
+  bstrp_info 'enabling bumblebee...'
+
+  systemctl enable bumblebeed
 
   bstrp_info 'completed device install!'
 
