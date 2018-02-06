@@ -120,4 +120,5 @@ function os_update() {
 
 function os_post_config_update() {
   gsettings set org.gnome.desktop.screensaver picture-uri "file://$HOME/Pictures/wallpapers/red-highlands-john-towner.jpg"
+  gsettings set org.gnome.desktop.background picture-uri "file://$HOME/Pictures/wallpapers/mirrors-edge-faith-shatter.jpg"
 }
