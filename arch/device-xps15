@@ -26,8 +26,8 @@ function device_prepare() {
   do
     END="$(($LAST_END + ${PARTITION_SIZES[$i]}))"
     parted -s -a optimal "$MAIN_HDD_DEVICE" mkpart primary "${PARTITION_FORMATS[$i]}" "${LAST_END}MiB" "${END}MiB"
-    parted -s -a optimal "$MAIN_HDD_DEVICE" name $i "${PARTITION_NAMES[$i]}"
-    eval "$(printf "${PARTITION_COMMAND[$i]}" "$(partition_path $i)")"
+    parted -s -a optimal "$MAIN_HDD_DEVICE" name "$(($i + 1))" "${PARTITION_NAMES[$i]}"
+    eval "$(printf "${PARTITION_COMMAND[$i]}" "$(partition_path $(($i + 1)))")"
     LAST_END="$END"
   done
 
