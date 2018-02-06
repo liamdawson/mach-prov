@@ -86,7 +86,7 @@ function device_install() {
   bstrp_info 'installing bootloader...'
 
   REFIND_CONFIG_LOCATION="/boot/refind_linux.conf"
-  BOOT_PART_UUID="$(blkid "$(partition_path 3)" | grep -oP ' UUID="\K[^"]+(?=")')"
+  BOOT_PART_UUID="$(blkid "$(partition_path 6)" | grep -oP ' UUID="\K[^"]+(?=")')"
   BOOT_STANZA='"Boot with default options"  "root=UUID='"$BOOT_PART_UUID"' rootflags=rw,subvol=@root add_efi_memmap initrd=@root/boot/intel-ucode.img initrd=@root/boot/initramfs-linux.img video=1920x1080"'
 
   # write the default boot configuration
