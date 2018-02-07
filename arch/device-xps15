@@ -117,6 +117,18 @@ function device_install() {
 
 function device_update() {
   os_update
+
+  sudo bash <<EndOfRefindUpdateScript
+  [[ -d /boot/efi/EFI/refind/themes ]] || mkdir /boot/efi/EFI/refind/themes
+  if [[ -d /boot/efi/EFI/refind/themes/refind-theme ]]
+  then
+    cd /boot/efi/EFI/refind/themes/refind-theme
+    git pull
+  else
+    cd /boot/efi/EFI/refind/themes
+    git clone https://github.com/liamdawson/refind-theme.git
+  fi
+EndOfRefindUpdateScript
 }
 
 function device_post_config_update() {
