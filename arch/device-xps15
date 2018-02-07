@@ -88,11 +88,14 @@ function device_install() {
   REFIND_CONFIG_LOCATION="/boot/refind_linux.conf"
   BOOT_PART_UUID="$(blkid "$(partition_path 6)" | grep -oP ' UUID="\K[^"]+(?=")')"
   BOOT_STANZA='"Boot with default options"  "root=UUID='"$BOOT_PART_UUID"' rootflags=rw,subvol=@root add_efi_memmap initrd=@root/boot/intel-ucode.img initrd=@root/boot/initramfs-linux.img video=1920x1080"'
+  REFIND_CONF="$(cat $BOOTSTRAP_OS_DIR/data/xps15/refind.conf | sed -e "s/##ARCHVOL##/$BOOT_PART_UUID/g")"
 
   # write the default boot configuration
   echo "$BOOT_STANZA" > "$REFIND_CONFIG_LOCATION"
 
   refind-install
+
+  echo "$REFIND_CONF" > "/boot/efi/EFI/refind/refind.conf"
 
   # search the correct BTRFS subvolume for boot files
   sed -e 's|^#also_scan_dirs.*$|also_scan_dirs @root/boot|' /boot/efi/EFI/refind/refind.conf -i
