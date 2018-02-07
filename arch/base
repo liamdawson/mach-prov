@@ -87,6 +87,14 @@ function os_install() {
 
   cp "${BOOTSTRAP_OS_DIR}/data/50-wheel-admin" /etc/sudoers.d/50-wheel-admin
 
+  bstrp_info 'enabling gui...'
+
+  systemctl enable gdm
+
+  bstrp_info 'enabling Network Manager...'
+
+  systemctl enable NetworkManager
+
   bstrp_info "changing default user's password..."
 
   passwd "$BOOTSTRAP_USERNAME"
@@ -106,7 +114,7 @@ function os_update() {
     OLD_DIR="$(pwd)"
     git clone https://aur.archlinux.org/trizen.git /tmp/trizen
     cd /tmp/trizen
-    makepkg -si
+    makepkg -si --noconfirm
     cd "$OLD_DIR"
     rm -rf /tmp/trizen
   fi
