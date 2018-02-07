@@ -139,7 +139,7 @@ function device_update() {
 EndOfRefindUpdateScript
 
   sudo -v
-  echo "$(make_refind_config)" > "/boot/efi/EFI/refind/refind.conf"
+  echo "$(make_refind_config)" | sudo tee "/boot/efi/EFI/refind/refind.conf" >/dev/null
 }
 
 function device_post_config_update() {
