@@ -7,6 +7,11 @@ function partition_path() {
   echo "${MAIN_HDD_DEVICE}p$1"
 }
 
+function make_refind_config() {
+  BOOT_PART_UUID="$(blkid "$(partition_path 6)" | grep -oP ' UUID="\K[^"]+(?=")')"
+  echo "$(cat $BOOTSTRAP_OS_DIR/data/xps15/refind.conf | sed -e "s/##ARCHVOL##/$BOOT_PART_UUID/g")"
+}
+
 function device_prepare() {
   bstrp_info 'formatting machine...'
 
@@ -95,7 +100,7 @@ function device_install() {
 
   refind-install
 
-  echo "$REFIND_CONF" > "/boot/efi/EFI/refind/refind.conf"
+  echo "$(make_refind_config)" > "/boot/efi/EFI/refind/refind.conf"
 
   # search the correct BTRFS subvolume for boot files
   sed -e 's|^#also_scan_dirs.*$|also_scan_dirs @root/boot|' /boot/efi/EFI/refind/refind.conf -i
@@ -132,6 +137,8 @@ function device_update() {
     git clone https://github.com/liamdawson/refind-theme.git
   fi
 EndOfRefindUpdateScript
+
+  echo "$(make_refind_config)" > "/boot/efi/EFI/refind/refind.conf"
 }
 
 function device_post_config_update() {
