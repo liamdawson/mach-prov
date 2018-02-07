@@ -9,8 +9,7 @@ function partition_path() {
 
 function make_refind_config() {
   BASE_FILE="$(cat "$BOOTSTRAP_OS_DIR/data/xps15/refind.conf")"
-  BOOT_PART_UUID="$(sudo -n blkid "$(partition_path 6)" | grep -oP ' UUID="\K[^"]+(?=")')"
-  echo "$(cat $BOOTSTRAP_OS_DIR/data/xps15/refind.conf | sed -e "s/##ARCHVOL##/$BOOT_PART_UUID/g")"
+  echo "$(cat $BOOTSTRAP_OS_DIR/data/xps15/refind.conf | sed -e "s/##ARCHVOL##/$(part_uuid "$(partition_path 6)")/g")"
 }
 
 function device_prepare() {

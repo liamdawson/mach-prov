@@ -17,6 +17,10 @@ export AUR_MISC_PACKAGES="icu55"
 export AUR_PACKAGES="${AUR_GUI_PACKAGES} ${AUR_FONT_PACKAGES} ${AUR_APP_PACKAGES} ${AUR_DEV_PACKAGES} ${AUR_DEV_APP_PACKAGES} ${AUR_MISC_PACKAGES}"
 export GNOME_EXTENSIONS="user-theme@gnome-shell-extensions.gcampax.github.com dash-to-panel@jderose9.github.com"
 
+function part_uuid() {
+  echo "$(sudo blkid -s PARTUUID -o value $1)"
+}
+
 function os_prepare() {
   bstrp_info 'enabling NTP in base install environment...'
 
