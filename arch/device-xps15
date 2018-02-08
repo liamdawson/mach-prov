@@ -146,6 +146,8 @@ function device_post_config_update() {
   os_post_config_update
 
   gsettings set org.gnome.desktop.interface show-battery-percentage true
+  gsettings set org.gnome.desktop.peripherals.touchpad natural-scroll false
+  gsettings set org.gnome.desktop.peripherals.touchpad tap-to-click true
 }
 
 source "$BOOTSTRAP_OS_DIR/base"
