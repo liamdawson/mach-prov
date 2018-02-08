@@ -130,7 +130,7 @@ function os_update() {
   sudo cp "$BOOTSTRAP_OS_DIR/data/font-config/90-monospace.conf" '/etc/fonts/conf.d/'
 
   # pull gnome extension install script
-  sudo bash -c "curl -sSL 'https://gist.githubusercontent.com/okelet/14bb79ff44e45eee869d444b6a7d68cf/raw/7992b7b6594da76a46c8479a0f03a2c8bd411e6d/gnome-ext-install.sh' > /usr/local/bin/gnome-ext"
+  sudo bash -c "curl -sSL 'https://gist.githubusercontent.com/liamdawson/35c5da4a1781467a99984fde7f3da3ee/raw/db7b58f9769d59474e0aadb2fa2024061dd8b6b5/gnome-ext-install.sh' > /usr/local/bin/gnome-ext"
   sudo chmod +x /usr/local/bin/gnome-ext
 
   # install preferred gnome extensions
