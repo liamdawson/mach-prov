@@ -15,7 +15,7 @@ export AUR_FONT_PACKAGES="ttf-roboto-mono"
 export AUR_APP_PACKAGES="trizen"
 export AUR_MISC_PACKAGES="icu55"
 export AUR_PACKAGES="${AUR_GUI_PACKAGES} ${AUR_FONT_PACKAGES} ${AUR_APP_PACKAGES} ${AUR_DEV_PACKAGES} ${AUR_DEV_APP_PACKAGES} ${AUR_MISC_PACKAGES}"
-export GNOME_EXTENSIONS=( "user-theme@gnome-shell-extensions.gcampax.github.com" "dash-to-panel@jderose9.github.com" )
+export GNOME_EXTENSIONS=( "user-theme@gnome-shell-extensions.gcampax.github.com" "dash-to-panel@jderose9.github.com" "alternate-tab@gnome-shell-extensions.gcampax.github.com" "drive-menu@gnome-shell-extensions.gcampax.github.com" "nohotcorner@azuri.free.fr" )
 
 function part_uuid() {
   echo "$(sudo blkid -s PARTUUID -o value $1)"
