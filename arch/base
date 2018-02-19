@@ -3,9 +3,9 @@
 export ARCH_BASE_PACKAGES="base base-devel vim curl sudo openssh"
 export ARCH_DEV_PACKAGES="git stow picocom jdk8-openjdk gdb arm-none-eabi-binutils arm-none-eabi-gdb cmake lib32-glibc"
 export ARCH_DEV_APP_PACKAGES="firefox-developer-edition"
-export ARCH_APP_PACKAGES="${ARCH_DEV_APP_PACKAGES} elinks xfce4-terminal firefox firefox-developer-edition gnome-control-center nautilus gnome-tweak-tool"
+export ARCH_APP_PACKAGES="${ARCH_DEV_APP_PACKAGES} elinks w3m xfce4-terminal firefox firefox-developer-edition gnome-control-center nautilus gnome-tweak-tool telegram-desktop gnome-screenshot"
 export ARCH_GUI_PACKAGES="xorg-server xorg-server-xwayland gdm gnome-shell polkit-gnome network-manager-applet"
-export ARCH_FONT_PACKAGES="ttf-roboto noto-fonts noto-fonts-extra noto-fonts-emoji"
+export ARCH_FONT_PACKAGES="ttf-roboto noto-fonts noto-fonts-extra noto-fonts-emoji ttf-croscore"
 export ARCH_MISC_PACKAGES="zsh dialog"
 export ARCH_PACKAGES="${ARCH_PACKAGES:-} ${ARCH_BASE_PACKAGES} ${ARCH_DEV_PACKAGES} ${ARCH_APP_PACKAGES} ${ARCH_GUI_PACKAGES} ${ARCH_FONT_PACKAGES} ${ARCH_MISC_PACKAGES}"
 export AUR_GUI_PACKAGES=""
@@ -127,7 +127,8 @@ function os_update() {
   echo "$AUR_PACKAGES" | xargs trizen --needed --noconfirm -Sy 
   
   # ensure preferred fonts are configured
-  sudo cp "$BOOTSTRAP_OS_DIR/data/font-config/90-monospace.conf" '/etc/fonts/conf.d/'
+  [[ ! -f '/etc/fonts/conf.d/90-monospace.conf' ]] || sudo rm '/etc/fonts/conf.d/90-monospace.conf'
+  sudo cp "$BOOTSTRAP_OS_DIR/data/font-config/99-bindings.conf" '/etc/fonts/conf.d/'
 
   # pull gnome extension install script
   sudo bash -c "curl -sSL 'https://gist.githubusercontent.com/liamdawson/35c5da4a1781467a99984fde7f3da3ee/raw/ca85675ccb2653196cc3695926abcc78f92280a3/gnome-ext-install.sh' > /usr/local/bin/gnome-ext"
