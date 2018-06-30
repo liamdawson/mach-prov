@@ -1,0 +1,55 @@
+#!/bin/bash
+
+BOOTSTRAP_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+source "$BOOTSTRAP_DIR/vars"
+
+WORKSPACE_DIR="$HOME/workspace"
+
+SHARED_CONF_DIR="$WORKSPACE_DIR/cdconf"
+SHARED_CONF_URL="git@github.com:/liamdawson/cdconf.git"
+
+(
+  # abort on 1) error output from a line 2) unset variable
+  set -e
+  set -u
+
+  source $BOOTSTRAP_DIR/utils/output
+
+  if [[ $# -ne 1 ]]
+  then
+    bstrp_fatal 'expected a path to an os/device configuration pair (e.g. "arch/device-xps15")'
+    exit 1
+  fi
+
+  BOOTSTRAP_OS_DIR="$( cd "$( dirname "$1" )" && pwd )"
+  source $1
+
+  base_update() {
+    device_update
+  
+    # global "I'm working on something here" folder
+    [[ -d "$WORKSPACE_DIR" ]] || mkdir "$WORKSPACE_DIR"
+  
+    # config I like sharing across machines
+    [[ -d "$SHARED_CONF_DIR" ]] && (cd "$SHARED_CONF_DIR" && git pull) || git clone "$SHARED_CONF_URL" "$SHARED_CONF_DIR"
+    bash "$SHARED_CONF_DIR/.hooks/updated"
+  
+    # make sure user shell is ZSH
+    ZSH_PATH="$(which zsh 2>/dev/null)"
+    if [[ ! -z "$ZSH_PATH" ]]
+    then
+      # if not currently running zsh, zsh is probably not default shell
+      echo "$SHELL" | grep -e "/zsh$" >/dev/null 2>&1 || sudo chsh -s "$ZSH_PATH" "$(whoami)"
+    else
+      echo 'zsh was not found, this is unexpected.'
+    fi
+
+    device_post_config_update
+  }
+
+  base_update
+)
+
+
+
+

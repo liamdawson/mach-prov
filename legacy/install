@@ -1,0 +1,26 @@
+#!/bin/bash
+
+BOOTSTRAP_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+source "$BOOTSTRAP_DIR/vars"
+
+(
+  # abort on 1) error output from a line 2) unset variable
+  set -e
+  set -u
+
+  source $BOOTSTRAP_DIR/utils/output
+
+  if [[ $# -ne 3 ]]
+  then
+    bstrp_fatal 'expected a path to an os/device configuration pair, a hostname, and a username'
+    bstrp_fatal '(e.g. `arch/device-xps15 fhtagn liamdawson`)'
+    exit 1
+  fi
+
+  BOOTSTRAP_OS_DIR="$( cd "$( dirname "$1" )" && pwd )"
+  BOOTSTRAP_HOSTNAME="$2"
+  BOOTSTRAP_USERNAME="$3"
+  source $1
+
+  device_install
+)
