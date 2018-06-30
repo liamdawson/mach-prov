@@ -56,7 +56,7 @@ states = [
   AptGetUpgrade()
 ]
 
-class PackageInstallStateBase(State):
+class AptPackageInstallStateBase(State):
   """Ensure the listed packages are installed."""
   name = "apt-get install"
   packages = []

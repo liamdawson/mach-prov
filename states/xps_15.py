@@ -1,8 +1,8 @@
 from .state import State
-from .apt_get import PackageInstallStateBase
+from .apt_get import AptPackageInstallStateBase
 
 
-class BumblebeeNvidiaGraphics(PackageInstallStateBase):
+class BumblebeeNvidiaGraphics(AptPackageInstallStateBase):
   """Ensure the bumblebee packages are installed for optimal graphics."""
   name = "Install bumblebee-nvidia"
   packages = [

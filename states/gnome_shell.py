@@ -1,7 +1,7 @@
-from .apt_get import PackageInstallStateBase, PackageRemoveStateBase
+from .apt_get import AptPackageInstallStateBase, PackageRemoveStateBase
 
 
-class GnomeShellPackage(PackageInstallStateBase):
+class GnomeShellPackage(AptPackageInstallStateBase):
   """Ensure the Gnome Shell package is installed on this system."""
   name = "Install gnome-shell"
   packages = ['gnome-shell']
