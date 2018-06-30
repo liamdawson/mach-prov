@@ -2,6 +2,9 @@ from .state import State
 from sys import stdin, stdout, stderr
 import subprocess
 
+def transparent_call(args):
+  return subprocess.call(args, stdin=stdin, stdout=stdout, stderr=stderr) == 0
+
 class AptGetUpdate(State):
   """Ensure the apt cache is up to date."""
   name = "apt-get update"
@@ -11,7 +14,7 @@ class AptGetUpdate(State):
   ]
 
   def __call__(self):
-    pass
+    return transparent_call(['apt-get', 'update'])
 
 class AptGetUpgrade(State):
   """Ensure the all apt packages are up to date."""
@@ -22,7 +25,7 @@ class AptGetUpgrade(State):
   ]
 
   def __call__(self):
-    pass
+    return transparent_call(['apt-get', 'upgrade', '-y'])
 
 states = [
   AptGetUpdate(),
