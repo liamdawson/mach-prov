@@ -17,5 +17,5 @@ sudo apt-get install -y curl
 mkdir ~/b
 cd ~/b
 curl -sSL https://github.com/liamdawson/mach-prov/archive/new.tar.gz | tar xz --strip-components=1
-python provision.py ubuntu xps15
+sudo python3 provision.py ubuntu xps15
 ```

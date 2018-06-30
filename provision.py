@@ -1,6 +1,5 @@
 from argparse import ArgumentParser
 from importlib import import_module
-from sets import Set
 
 import states
 
@@ -14,7 +13,7 @@ if __name__ == '__main__':
 
   args = parser.parse_args()
 
-  actions = states.relevant_states(Set([tag.lower() for tag in args.tags]))
+  actions = states.relevant_states(set([tag.lower() for tag in args.tags]))
 
   if args.apply:
     for action in actions:
