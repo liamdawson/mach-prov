@@ -1,4 +1,4 @@
-from apt_get import PackageInstallStateBase, PackageRemoveStateBase
+from .apt_get import PackageInstallStateBase, PackageRemoveStateBase
 
 
 class GnomeShellPackage(PackageInstallStateBase):

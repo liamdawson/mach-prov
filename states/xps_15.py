@@ -1,5 +1,5 @@
-from state import State
-from apt_get import PackageInstallStateBase
+from .state import State
+from .apt_get import PackageInstallStateBase
 
 
 class BumblebeeNvidiaGraphics(PackageInstallStateBase):

@@ -1,4 +1,4 @@
-from state import State
+from .state import State
 from sys import stdin, stdout, stderr
 import subprocess
 

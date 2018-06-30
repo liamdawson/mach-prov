@@ -1,6 +1,4 @@
-import gnome_shell
-import apt_get
-import xps_15
+from . import gnome_shell, apt_get, xps_15
 
 states = reduce(lambda current_states, new_states: current_states + new_states,
 [
