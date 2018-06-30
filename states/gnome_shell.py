@@ -10,8 +10,8 @@ class GnomeShellPackage(PackageInstallStateBase):
 
 class RemoveUbuntuShellPackage(PackageRemoveStateBase):
   """Ensure the Ubuntu Shell package is not installed on this system."""
-  name = "Remove ubuntu-shell"
-  packages = ['ubuntu-shell']
+  name = "Remove ubuntu-session"
+  packages = ['ubuntu-session']
   tags = [set(['ubuntu'])]
 
 

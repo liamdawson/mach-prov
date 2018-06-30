@@ -74,10 +74,15 @@ class PackageRemoveStateBase(State):
   name = "apt-get remove"
   packages = []
 
-  def __call__(self, _):
-    result = subprocess.call(['apt-get', 'remove', '-y'] + self.packages, stdin=stdin, stdout=stdout, stderr=stderr)
+  def _check_installed(self, packages):
+    package_list = subprocess.check_output(['dpkg', '--get-selections'] + packages, stderr=None)
+    return package_list.splitlines()
 
-    if result == 0:
-      return True
+  def __call__(self, _):
+    installed_packages = self._check_installed(self.packages)
+
+    if any(installed_packages):
+      return transparent_call(['apt-get', 'remove', '-y'] + self.packages)
     else:
-      return False
+      print(" * none of the packages were installed, skipping removal.")
+      return True
