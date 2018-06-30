@@ -1,12 +1,10 @@
-from sets import Set
-
 if 'basestring' not in globals():
   basestring = str
 
 class State:
   def should_apply(self, tags):
     try:
-      return any([tags.issuperset(set) for set in self.tags])
+      return any([tags.issuperset(the_set) for the_set in self.tags])
     except AttributeError:
       return False
   

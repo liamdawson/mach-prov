@@ -1,4 +1,3 @@
-from sets import Set
 from state import State
 from apt_get import PackageInstallStateBase
 
@@ -12,7 +11,7 @@ class BumblebeeNvidiaGraphics(PackageInstallStateBase):
     'primus',
     'linux-headers-generic'
   ]
-  tags = [Set(['ubuntu', 'xps15'])]
+  tags = [set(['ubuntu', 'xps15'])]
 
 
 states = [

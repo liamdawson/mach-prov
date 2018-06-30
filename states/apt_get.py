@@ -1,4 +1,3 @@
-from sets import Set
 from state import State
 from sys import stdin, stdout, stderr
 import subprocess
@@ -7,8 +6,8 @@ class AptGetUpdate(State):
   """Ensure the apt cache is up to date."""
   name = "apt-get update"
   tags = [
-    Set(['ubuntu']),
-    Set(['debian'])
+    set(['ubuntu']),
+    set(['debian'])
   ]
 
   def __call__(self):
@@ -18,8 +17,8 @@ class AptGetUpgrade(State):
   """Ensure the all apt packages are up to date."""
   name = "apt-get upgrade"
   tags = [
-    Set(['ubuntu']),
-    Set(['debian'])
+    set(['ubuntu']),
+    set(['debian'])
   ]
 
   def __call__(self):
