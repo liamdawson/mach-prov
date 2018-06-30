@@ -3,6 +3,10 @@ from importlib import import_module
 
 import states
 
+state_config = {
+  'apt_mirror': 'http://mirror.as24220.net/pub/ubuntu/'
+}
+
 def format_state_output(state):
   return str(state)
 
@@ -18,7 +22,7 @@ if __name__ == '__main__':
   if args.apply:
     for action in actions:
       print(format_state_output(action))
-      if not action():
+      if not action(state_config):
         print("Previous action failed. Exiting.")
         break
   else:

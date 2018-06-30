@@ -8,7 +8,7 @@ class State:
     except AttributeError:
       return False
   
-  def __call__(self):
+  def __call__(self, _):
     raise NotImplementedError("State call not implemented for {}".format(self.__class__.__name__))
 
   def __str__(self):

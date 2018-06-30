@@ -1,9 +1,32 @@
 from .state import State
 from sys import stdin, stdout, stderr
+import platform
 import subprocess
 
 def transparent_call(args):
   return subprocess.call(args, stdin=stdin, stdout=stdout, stderr=stderr) == 0
+
+class UbuntuAptMirrors(State):
+  """Ensure the preferred Ubuntu apt mirror is used."""
+  name = "Select preferred APT mirror"
+  tags = [set(['ubuntu'])]
+
+  def __call__(self, state_data):
+    preferred_mirror = state_data['apt_mirror']
+
+    apt_conf = """
+# set by provision.py
+
+deb {mirror} {codename} main restricted universe multiverse
+deb {mirror} {codename}-security main restricted universe multiverse
+deb {mirror} {codename}-updates main restricted universe multiverse
+deb {mirror} {codename}-backports main restricted universe multiverse
+    """.format(mirror=preferred_mirror, codename=platform.linux_distribution()[2])
+
+    with open('/etc/apt/sources.list.new', 'w') as file:
+      file.write(apt_conf)
+
+    return transparent_call(['mv', '/etc/apt/sources.list.new', '/etc/apt/sources.list'])
 
 class AptGetUpdate(State):
   """Ensure the apt cache is up to date."""
@@ -13,7 +36,7 @@ class AptGetUpdate(State):
     set(['debian'])
   ]
 
-  def __call__(self):
+  def __call__(self, _):
     return transparent_call(['apt-get', 'update'])
 
 class AptGetUpgrade(State):
@@ -24,10 +47,11 @@ class AptGetUpgrade(State):
     set(['debian'])
   ]
 
-  def __call__(self):
+  def __call__(self, _):
     return transparent_call(['apt-get', 'upgrade', '-y'])
 
 states = [
+  UbuntuAptMirrors(),
   AptGetUpdate(),
   AptGetUpgrade()
 ]
@@ -37,7 +61,7 @@ class PackageInstallStateBase(State):
   name = "apt-get install"
   packages = []
 
-  def __call__(self):
+  def __call__(self, _):
     result = subprocess.call(['apt-get', 'install', '-y'] + self.packages, stdin=stdin, stdout=stdout, stderr=stderr)
 
     if result == 0:
@@ -45,13 +69,12 @@ class PackageInstallStateBase(State):
     else:
       return False
 
-
 class PackageRemoveStateBase(State):
   """Ensure the listed packages are not installed."""
   name = "apt-get remove"
   packages = []
 
-  def __call__(self):
+  def __call__(self, _):
     result = subprocess.call(['apt-get', 'remove', '-y'] + self.packages, stdin=stdin, stdout=stdout, stderr=stderr)
 
     if result == 0:
