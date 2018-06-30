@@ -6,20 +6,16 @@ Liam Dawson's personal machine provisioning scripts.
 
 ## Instructions
 
-### Arch Dell XPS 15
+### Ubuntu Dell XPS 15
 
-#### New Install
+#### After new install
 
 ```shell
 # enable network, then...
 
+sudo apt-get install -y curl
 mkdir ~/b
 cd ~/b
-curl -sSL https://github.com/liamdawson/mach-prov/archive/master.tar.gz | tar xz --strip-components=1
-./prepare dell/device-xps15
-arch-chroot /mnt
-cd /mach-prov
-./install dell/device-xps15 fhtagn liamdawson
+curl -sSL https://github.com/liamdawson/mach-prov/archive/new.tar.gz | tar xz --strip-components=1
+python provision.py ubuntu xps15
 ```
-
-#### Update
