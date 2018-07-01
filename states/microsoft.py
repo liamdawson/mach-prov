@@ -12,7 +12,7 @@ class AddMicrosoftKey(AptTrustedKeyAddStateBase):
     dearmored_key = subprocess.check_output(['gpg', '--dearmor'], stdin=pull_key.stdout)
     pull_key.stdout.close()
 
-    return dearmored_key
+    return dearmored_key.decode(encoding="utf-8")
 
 class AddVsCodeRepo(AptRepositoryAddStateBase):
   """Ensure the Microsoft VS Code repo is available to apt."""
