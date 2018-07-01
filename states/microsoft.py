@@ -4,7 +4,7 @@ import subprocess
 class AddMicrosoftKey(AptTrustedKeyAddStateBase):
   """Ensure the Microsoft packages signing key is trusted by apt."""
   name = 'Add Microsoft packages signing key'
-  tags = [set('ubuntu'), set('debian')]
+  tags = [set(['ubuntu']), set(['debian'])]
   key_name = 'microsoft'
 
   def signing_key(self):
@@ -17,7 +17,7 @@ class AddMicrosoftKey(AptTrustedKeyAddStateBase):
 class AddVsCodeRepo(AptRepositoryAddStateBase):
   """Ensure the Microsoft VS Code repo is available to apt."""
   name = 'Add Microsoft VS Code repo'
-  tags = [set('ubuntu'), set('debian')]
+  tags = [set(['ubuntu']), set(['debian'])]
   repo_name = 'vscode'
   repo_url = 'https://packages.microsoft.com/repos/vscode'
   repo_arch = 'amd64'
@@ -27,7 +27,7 @@ class AddVsCodeRepo(AptRepositoryAddStateBase):
 class InstallVsCode(AptPackageInstallStateBase):
   """Ensure VS Code (stable) is installed."""
   name = 'Install VS Code'
-  tags = [set('ubuntu'), set('debian')]
+  tags = [set(['ubuntu']), set(['debian'])]
   packages = ['code']
 
 states = [
