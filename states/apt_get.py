@@ -102,7 +102,7 @@ class AptRepositoryAddStateBase(State):
   """Ensure the provided repo is available to apt"""
 
   def _write_repo_definition(self, identifier, url, version, repos, arch=None):
-    with open('/etc/apt/sources.list.d/{}.list'.format(identifier)) as file:
+    with open('/etc/apt/sources.list.d/{}.list'.format(identifier), 'w') as file:
       file.truncate()
       file.write('deb ')
       if arch:
