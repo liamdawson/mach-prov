@@ -50,12 +50,6 @@ class AptGetUpgrade(State):
   def __call__(self, _):
     return transparent_call(['apt-get', 'upgrade', '-y'])
 
-states = [
-  UbuntuAptMirrors(),
-  AptGetUpdate(),
-  AptGetUpgrade()
-]
-
 class AptPackageInstallStateBase(State):
   """Ensure the listed packages are installed."""
   name = "apt-get install"
@@ -69,7 +63,7 @@ class AptPackageInstallStateBase(State):
     else:
       return False
 
-class PackageRemoveStateBase(State):
+class AptPackageRemoveStateBase(State):
   """Ensure the listed packages are not installed."""
   name = "apt-get remove"
   packages = []
@@ -86,3 +80,56 @@ class PackageRemoveStateBase(State):
     else:
       print(" * none of the packages were installed, skipping removal.")
       return True
+
+class AptTrustedKeyAddStateBase(State):
+  """Ensure the appropriate GPG key is trusted by apt"""
+
+  def _write_signing_key(self, identifier, key):
+    with open('/etc/apt/trusted.gpg.d/{}.gpg'.format(identifier), 'w') as file:
+      file.truncate()
+      file.write(key)
+
+  def __call__(self, _):
+    try:
+      self._write_signing_key(self.key_name, self.signing_key())
+      return True
+    except AttributeError as e:
+      print("required attribute not found")
+      print(e)
+      return False
+
+class AptRepositoryAddStateBase(State):
+  """Ensure the provided repo is available to apt"""
+
+  def _write_repo_definition(self, identifier, url, version, repos, arch=None):
+    with open('/etc/apt/sources.list.d/{}.list'.format(identifier)) as file:
+      file.truncate()
+      file.write('deb ')
+      if arch:
+        file.write('[arch={}] '.format(arch))
+      file.write('{} {} {}'.format(url, version, repos))
+
+  def __call__(self, _):
+    try:
+      self._write_repo_definition(self.repo_name, self.repo_url, self.repo_version, self.repo_repositories, getattr(self, 'repo_arch', None))
+      return True
+    except AttributeError as e:
+      print("required attribute not found")
+      print(e)
+      return False
+
+class EnsureAptResources(AptPackageInstallStateBase):
+  """Ensure the HTTPS transport for apt, and gpg, are available."""
+  name = 'Install https apt transport and gpg'
+  tags = [set('ubuntu'), set('ubuntu')]
+  packages = [
+    'apt-transport-https',
+    'gpg'
+  ]
+
+states = [
+  UbuntuAptMirrors(),
+  AptGetUpdate(),
+  AptGetUpgrade(),
+  EnsureAptResources()
+]

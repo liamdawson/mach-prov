@@ -1,4 +1,4 @@
-from .apt_get import AptPackageInstallStateBase, PackageRemoveStateBase
+from .apt_get import AptPackageInstallStateBase, AptPackageRemoveStateBase
 
 
 class GnomeShellPackage(AptPackageInstallStateBase):
@@ -8,7 +8,7 @@ class GnomeShellPackage(AptPackageInstallStateBase):
   tags = [set(['ubuntu'])]
 
 
-class RemoveUbuntuShellPackage(PackageRemoveStateBase):
+class RemoveUbuntuShellPackage(AptPackageRemoveStateBase):
   """Ensure the Ubuntu Shell package is not installed on this system."""
   name = "Remove ubuntu-session"
   packages = ['ubuntu-session']
