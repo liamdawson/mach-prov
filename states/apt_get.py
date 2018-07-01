@@ -85,7 +85,7 @@ class AptTrustedKeyAddStateBase(State):
   """Ensure the appropriate GPG key is trusted by apt"""
 
   def _write_signing_key(self, identifier, key):
-    with open('/etc/apt/trusted.gpg.d/{}.gpg'.format(identifier), 'w') as file:
+    with open('/etc/apt/trusted.gpg.d/{}.gpg'.format(identifier), 'wb') as file:
       file.truncate()
       file.write(key)
 

@@ -1,4 +1,4 @@
-from .apt_get import AptRepositoryAddStateBase, AptPackageInstallStateBase, AptTrustedKeyAddStateBase
+from .apt_get import AptRepositoryAddStateBase, AptPackageInstallStateBase, AptTrustedKeyAddStateBase, AptGetUpdate
 import subprocess
 
 class AddMicrosoftKey(AptTrustedKeyAddStateBase):
@@ -12,7 +12,7 @@ class AddMicrosoftKey(AptTrustedKeyAddStateBase):
     dearmored_key = subprocess.check_output(['gpg', '--dearmor'], stdin=pull_key.stdout)
     pull_key.stdout.close()
 
-    return dearmored_key.decode(encoding="utf-8")
+    return dearmored_key
 
 class AddVsCodeRepo(AptRepositoryAddStateBase):
   """Ensure the Microsoft VS Code repo is available to apt."""
@@ -33,5 +33,6 @@ class InstallVsCode(AptPackageInstallStateBase):
 states = [
   AddMicrosoftKey(),
   AddVsCodeRepo(),
+  AptGetUpdate(),
   InstallVsCode()
 ]
